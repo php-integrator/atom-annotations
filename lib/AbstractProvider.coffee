@@ -249,7 +249,7 @@ class AbstractProvider
     ###*
      * Removes any annotations (across all editors).
     ###
-    removeAnnotations: (editor) ->
+    removeAnnotations: () ->
         for key,markers of @markers
             @removeAnnotationsByKey(key)
 
