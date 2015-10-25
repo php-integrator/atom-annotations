@@ -1,5 +1,7 @@
 # php-integrator-annotations
 
+![Screenshot](http://ipfs.pics/ipfs/QmTMju5ZZtcHBxKzfMfER35QkNik84Yva3HMbTz5LwMVdC)
+
 This package provides annotations for your PHP source code using [PHP Integrator](https://github.com/Gert-dev/php-integrator-base). Note that the [php-integrator-base](https://github.com/Gert-dev/php-integrator-base) package is required and needs to be set up correctly for this package to function correctly.
 
 What is included?
