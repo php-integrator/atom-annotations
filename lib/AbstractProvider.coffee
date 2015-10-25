@@ -17,7 +17,7 @@ class AbstractProvider
     ###*
      * List of markers that are present for each file.
     ###
-    markers: []
+    markers: {}
 
     ###*
      * SubAtom objects for each file.
@@ -39,8 +39,8 @@ class AbstractProvider
             editor.onDidSave (event) =>
                 @rescan(editor)
 
-            @registerAnnotations editor
-            @registerEvents editor
+            @registerAnnotations(editor)
+            @registerEvents(editor)
 
         # When you go back to only have one pane the events are lost, so need to re-register.
         atom.workspace.onDidDestroyPane (pane) =>
@@ -143,7 +143,7 @@ class AbstractProvider
 
         longTitle = editor.getLongTitle()
 
-        if @markers[longTitle] == undefined
+        if longTitle not of @markers
             @markers[longTitle] = []
 
         @markers[longTitle].push(marker)
@@ -252,6 +252,8 @@ class AbstractProvider
     removeAnnotations: () ->
         for key,markers of @markers
             @removeAnnotationsByKey(key)
+
+        @markers = {}
 
     ###*
      * Rescans the editor, updating all annotations.
