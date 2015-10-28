@@ -17,17 +17,22 @@ class AbstractProvider
     ###*
      * List of markers that are present for each file.
     ###
-    markers: {}
+    markers: null
 
     ###*
      * SubAtom objects for each file.
     ###
-    subAtoms: []
+    subAtoms: null
 
     ###*
      * The service (that can be used to query the source code and contains utility methods).
     ###
     service: null
+
+    constructor: () ->
+        # Constructer here because otherwise the object is shared between instances.
+        @markers  = {}
+        @subAtoms = []
 
     ###*
      * Initializes this provider.
@@ -36,9 +41,6 @@ class AbstractProvider
     ###
     activate: (@service) ->
         atom.workspace.observeTextEditors (editor) =>
-            editor.onDidSave (event) =>
-                @rescan(editor)
-
             @registerAnnotations(editor)
             @registerEvents(editor)
 
@@ -88,6 +90,9 @@ class AbstractProvider
 
             editor.onDidStopChanging () =>
                 @removePopover()
+
+            editor.onDidSave (event) =>
+                @rescan(editor)
 
             textEditorElement = atom.views.getView(editor)
 
