@@ -41,8 +41,16 @@ class AbstractProvider
     ###
     activate: (@service) ->
         atom.workspace.observeTextEditors (editor) =>
-            @registerAnnotations(editor)
-            @registerEvents(editor)
+            # NOTE: This is a very poor workaround, but at the moment I can't figure out any other way to do this
+            # properly. The problem is that if a file is already open on startup, the grammar needs time to perform the
+            # syntax highlighting. During that time, queries for scope descriptors will not return any useful
+            # information yet. However, the base package depends on them to e.g. find out whether a line contains
+            # comments or not. This mitigates (but will not completely solve) the issue. There seems to be no way to
+            # listen for the grammar to finish its parsing completely.
+            setTimeout(() =>
+                @registerAnnotations(editor)
+                @registerEvents(editor)
+            , 100)
 
         # When you go back to only have one pane the events are lost, so need to re-register.
         atom.workspace.onDidDestroyPane (pane) =>
