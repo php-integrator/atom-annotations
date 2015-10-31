@@ -136,8 +136,11 @@ class AbstractProvider
             new Point(parseInt(row), rowText.length)
         )
 
+        # NOTE: New markers are added on startup as initialization is done, so making them persistent will cause the
+        # 'storage' file of the project (in Atom's config folder) to grow forever (in a way it's a memory leak).
         marker = editor.markBufferRange(range, {
-            maintainHistory : true,
+            maintainHistory : true
+            persistent      : false
             invalidate      : 'touch'
         })
 
