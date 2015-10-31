@@ -108,14 +108,15 @@ class AbstractProvider
      * @param {TextEditor} editor The editor to search through.
     ###
     registerAnnotations: (editor) ->
-        text = editor.getText()
-        rows = text.split('\n')
-
         @subAtoms[editor.getLongTitle()] = new SubAtom
 
-        for rowNum,row of rows
+        for i in [0 .. editor.getLineCount() - 1]
+            row = editor.lineTextForBufferRow(i)
+
+            continue if not row
+
             while (match = @regex.exec(row))
-                @placeAnnotation(editor, rowNum, row, match)
+                @placeAnnotation(editor, i, row, match)
 
     ###*
      * Places an annotation at the specified line and row text.
