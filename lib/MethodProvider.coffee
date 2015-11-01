@@ -19,7 +19,7 @@ class MethodProvider extends AbstractProvider
 
         methodName = match[2]
 
-        context = @service.getClassMember(currentClass, methodName)
+        context = @service.getClassMethod(currentClass, methodName)
 
         if not context or (not context.override and not context.implementation)
             return null

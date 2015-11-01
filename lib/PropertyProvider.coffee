@@ -19,7 +19,7 @@ class PropertyProvider extends AbstractProvider
 
         propertyName = match[2]
 
-        context = @service.getClassMember(currentClass, propertyName)
+        context = @service.getClassProperty(currentClass, propertyName)
 
         if not context or not context.override
             return null
