@@ -14,21 +14,22 @@ class MethodProvider extends AbstractProvider
 
         return if not currentClass
 
-        currentClassInfo = @service.getClassInfo(currentClass)
+        @service.getClassInfo(currentClass, true).then (currentClassInfo) =>
+            return if not currentClassInfo
 
-        for name, method of currentClassInfo.methods
-            continue if not method.override and not method.implementation
+            for name, method of currentClassInfo.methods
+                continue if not method.override and not method.implementation
 
-            regex = new RegExp("^(\\s*)((?:public|protected|private)\\s+function\\s+" + name + "\\s*)\\(")
+                regex = new RegExp("^(\\s*)((?:public|protected|private)\\s+function\\s+" + name + "\\s*)\\(")
 
-            editor.getBuffer().scan(regex, (matchInfo) =>
-                # Remove the spacing from the range.
-                matchInfo.range.start.column += matchInfo.match[1].length
+                editor.getBuffer().scan(regex, (matchInfo) =>
+                    # Remove the spacing from the range.
+                    matchInfo.range.start.column += matchInfo.match[1].length
 
-                @placeAnnotation(editor, matchInfo.range, @extractAnnotationInfo(method))
+                    @placeAnnotation(editor, matchInfo.range, @extractAnnotationInfo(method))
 
-                matchInfo.stop()
-            )
+                    matchInfo.stop()
+                )
 
     ###*
      * Fetches annotation info for the specified context.
