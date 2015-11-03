@@ -118,32 +118,22 @@ class AbstractProvider
     registerAnnotations: (editor) ->
         @subAtoms[editor.getLongTitle()] = new SubAtom
 
-        for i in [0 .. editor.getLineCount() - 1]
-            row = editor.lineTextForBufferRow(i)
-
-            continue if not row
-
-            while (match = @regex.exec(row))
-                @placeAnnotation(editor, i, row, match)
+        editor.getBuffer().scan(@regex, ({match, matchText, range, stop, replace}) =>
+            @placeAnnotation(editor, range, match)
+        )
 
     ###*
      * Places an annotation at the specified line and row text.
      *
      * @param {TextEditor} editor
-     * @param {number}     row
-     * @param {string}     rowText
-     * @param {array}      match
+     * @param {Range}      range
+     * @param {string}     match
     ###
-    placeAnnotation: (editor, row, rowText, match) ->
-        annotationInfo = @extractAnnotationInfo(editor, row, rowText, match)
+    placeAnnotation: (editor, range, match) ->
+        annotationInfo = @extractAnnotationInfo(editor, range, match)
 
         if not annotationInfo
             return
-
-        range = new Range(
-            new Point(parseInt(row), 0),
-            new Point(parseInt(row), rowText.length)
-        )
 
         # NOTE: New markers are added on startup as initialization is done, so making them persistent will cause the
         # 'storage' file of the project (in Atom's config folder) to grow forever (in a way it's a memory leak).
@@ -165,17 +155,16 @@ class AbstractProvider
 
         @markers[longTitle].push(marker)
 
-        @registerAnnotationEventHandlers(editor, row, annotationInfo)
+        @registerAnnotationEventHandlers(editor, range.start.row, annotationInfo)
 
     ###*
      * Exracts information about the annotation match.
      *
      * @param {TextEditor} editor
-     * @param {int}        row
-     * @param {String}     rowText
+     * @param {Range}      range
      * @param {Array}      match
     ###
-    extractAnnotationInfo: (editor, row, rowText, match) ->
+    extractAnnotationInfo: (editor, range, match) ->
 
     ###*
      * Registers annotation event handlers for the specified row.

@@ -9,12 +9,12 @@ class PropertyProvider extends AbstractProvider
     ###*
      * @inheritdoc
     ###
-    regex: /(\s*(?:public|protected|private)\s+\$)(\w+)\s+/g
+    regex: /^(\s*(?:public|protected|private)\s+\$)(\w+)\s+/g
 
     ###*
      * @inheritdoc
     ###
-    extractAnnotationInfo: (editor, row, rowText, match) ->
+    extractAnnotationInfo: (editor, range, match) ->
         currentClass = @service.determineFullClassName(editor)
 
         propertyName = match[2]

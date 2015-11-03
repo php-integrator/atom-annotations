@@ -9,12 +9,12 @@ class MethodProvider extends AbstractProvider
     ###*
      * @inheritdoc
     ###
-    regex: /(\s*(?:public|protected|private)\s+function\s+)(\w+)\s*\(/g
+    regex: /^(\s*(?:public|protected|private)\s+function\s+)(\w+)\s*\(/g
 
     ###*
      * @inheritdoc
     ###
-    extractAnnotationInfo: (editor, row, rowText, match) ->
+    extractAnnotationInfo: (editor, range, match) ->
         currentClass = @service.determineFullClassName(editor)
 
         methodName = match[2]
