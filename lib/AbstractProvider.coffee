@@ -10,11 +10,6 @@ module.exports =
 ##
 class AbstractProvider
     ###*
-     * The regular expression that a line must match in order for it to be checked if it requires an annotation.
-    ###
-    regex: null
-
-    ###*
      * List of markers that are present for each file.
     ###
     markers: null
@@ -32,7 +27,7 @@ class AbstractProvider
     constructor: () ->
         # Constructer here because otherwise the object is shared between instances.
         @markers  = {}
-        @subAtoms = []
+        @subAtoms = {}
 
     ###*
      * Initializes this provider.
@@ -116,25 +111,16 @@ class AbstractProvider
      * @param {TextEditor} editor The editor to search through.
     ###
     registerAnnotations: (editor) ->
-        @subAtoms[editor.getLongTitle()] = new SubAtom
-
-        editor.getBuffer().scan(@regex, ({match, matchText, range, stop, replace}) =>
-            @placeAnnotation(editor, range, match)
-        )
+        throw new Error("This method is abstract and must be implemented!")
 
     ###*
      * Places an annotation at the specified line and row text.
      *
      * @param {TextEditor} editor
      * @param {Range}      range
-     * @param {string}     match
+     * @param {Object}     annotationInfo
     ###
-    placeAnnotation: (editor, range, match) ->
-        annotationInfo = @extractAnnotationInfo(editor, range, match)
-
-        if not annotationInfo
-            return
-
+    placeAnnotation: (editor, range, annotationInfo) ->
         # NOTE: New markers are added on startup as initialization is done, so making them persistent will cause the
         # 'storage' file of the project (in Atom's config folder) to grow forever (in a way it's a memory leak).
         marker = editor.markBufferRange(range, {
@@ -158,15 +144,6 @@ class AbstractProvider
         @registerAnnotationEventHandlers(editor, range.start.row, annotationInfo)
 
     ###*
-     * Exracts information about the annotation match.
-     *
-     * @param {TextEditor} editor
-     * @param {Range}      range
-     * @param {Array}      match
-    ###
-    extractAnnotationInfo: (editor, range, match) ->
-
-    ###*
      * Registers annotation event handlers for the specified row.
      *
      * @param {TextEditor} editor
@@ -181,14 +158,21 @@ class AbstractProvider
             longTitle = editor.getLongTitle()
             selector = '.line-number' + '.' + annotationInfo.lineNumberClass + '[data-buffer-row=' + row + '] .icon-right'
 
-            @subAtoms[longTitle].add gutterContainerElement, 'mouseover', selector, (event) =>
+            subAtom = new SubAtom()
+
+            subAtom.add gutterContainerElement, 'mouseover', selector, (event) =>
                 @handleMouseOver(event, editor, annotationInfo)
 
-            @subAtoms[longTitle].add gutterContainerElement, 'mouseout', selector, (event) =>
+            subAtom.add gutterContainerElement, 'mouseout', selector, (event) =>
                 @handleMouseOut(event, editor, annotationInfo)
 
-            @subAtoms[longTitle].add gutterContainerElement, 'click', selector, (event) =>
+            subAtom.add gutterContainerElement, 'click', selector, (event) =>
                 @handleMouseClick(event, editor, annotationInfo)
+
+            if longTitle not of @subAtoms
+                @subAtoms[longTitle] = []
+
+            @subAtoms[longTitle].push(subAtom)
 
     ###*
      * Handles the mouse over event on an annotation.
@@ -249,8 +233,11 @@ class AbstractProvider
         for i,marker of @markers[key]
             marker.destroy()
 
+        for i,subAtom of @subAtoms[key]
+            subAtom.dispose()
+
         @markers[key] = []
-        @subAtoms[key]?.dispose()
+        @subAtoms[key] = []
 
     ###*
      * Removes any annotations (across all editors).
@@ -260,6 +247,7 @@ class AbstractProvider
             @removeAnnotationsByKey(key)
 
         @markers = {}
+        @subAtoms = {}
 
     ###*
      * Rescans the editor, updating all annotations.

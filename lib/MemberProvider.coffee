@@ -9,12 +9,39 @@ class MethodProvider extends AbstractProvider
     ###*
      * @inheritdoc
     ###
+    regex: /^(\s*(?:public|protected|private)\s+function\s+)(\w+)\s*\(/g
+
+    methodRegex: /^(\s*(?:public|protected|private)\s+function\s+)(\w+)\s*\(/g
+
+
+    ###*
+     * @inheritdoc
+    ###
     registerAnnotations: (editor) ->
+        super(editor)
+
+
+
         currentClass = @service.determineFullClassName(editor)
 
         return if not currentClass
 
         currentClassInfo = @service.getClassInfo(currentClass)
+
+        for name, method of currentClassInfo.methods
+            continue if not method.override and not method.implementation
+
+            regex = new RegExp("^(\\s*)((?:public|protected|private)\\s+function\\s+" + name + "\\s*)\\(")
+
+            editor.getBuffer().scan(regex, (matchInfo) =>
+                # Remove the spacing from the range.
+                matchInfo.range.start.column += matchInfo.match[1].length
+
+                @placeAnnotation(editor, matchInfo.range, @extractAnnotationInfo(method))
+
+                stop()
+            )
+
 
         for name, property of currentClassInfo.properties
             continue if not property.override
@@ -27,22 +54,32 @@ class MethodProvider extends AbstractProvider
 
                 @placeAnnotation(editor, matchInfo.range, @extractAnnotationInfo(property))
 
-                matchInfo.stop()
+                stop()
             )
 
     ###*
-     * Fetches annotation info for the specified context.
-     *
-     * @param {Object} context
-     *
-     * @return {Object}
+     * @inheritdoc
     ###
     extractAnnotationInfo: (context) ->
+        extraData = null
+        tooltipText = ''
+        lineNumberClass = ''
+
         # NOTE: We deliberately show the declaring class here, not the structure (which could be a trait).
+        if context.override
+            extraData = context.override
+            lineNumberClass = 'override'
+            tooltipText = 'Overrides method from ' + extraData.declaringClass.name
+
+        else
+            extraData = context.implementation
+            lineNumberClass = 'implementation'
+            tooltipText = 'Implements method for ' + extraData.declaringClass.name
+
         return {
-            lineNumberClass : 'override'
-            tooltipText     : 'Overrides property from ' + context.override.declaringClass.name
-            extraData       : context.override
+            lineNumberClass : lineNumberClass
+            tooltipText     : tooltipText
+            extraData       : extraData
         }
 
     ###*

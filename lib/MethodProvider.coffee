@@ -9,21 +9,35 @@ class MethodProvider extends AbstractProvider
     ###*
      * @inheritdoc
     ###
-    regex: /^(\s*(?:public|protected|private)\s+function\s+)(\w+)\s*\(/g
-
-    ###*
-     * @inheritdoc
-    ###
-    extractAnnotationInfo: (editor, range, match) ->
+    registerAnnotations: (editor) ->
         currentClass = @service.determineFullClassName(editor)
 
-        methodName = match[2]
+        return if not currentClass
 
-        context = @service.getClassMethod(currentClass, methodName)
+        currentClassInfo = @service.getClassInfo(currentClass)
 
-        if not context or (not context.override and not context.implementation)
-            return null
+        for name, method of currentClassInfo.methods
+            continue if not method.override and not method.implementation
 
+            regex = new RegExp("^(\\s*)((?:public|protected|private)\\s+function\\s+" + name + "\\s*)\\(")
+
+            editor.getBuffer().scan(regex, (matchInfo) =>
+                # Remove the spacing from the range.
+                matchInfo.range.start.column += matchInfo.match[1].length
+
+                @placeAnnotation(editor, matchInfo.range, @extractAnnotationInfo(method))
+
+                matchInfo.stop()
+            )
+
+    ###*
+     * Fetches annotation info for the specified context.
+     *
+     * @param {Object} context
+     *
+     * @return {Object}
+    ###
+    extractAnnotationInfo: (context) ->
         extraData = null
         tooltipText = ''
         lineNumberClass = ''
