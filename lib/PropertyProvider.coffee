@@ -20,7 +20,7 @@ class MethodProvider extends AbstractProvider
             for name, property of currentClassInfo.properties
                 continue if not property.override
 
-                regex = new RegExp("^(\\s*)(?:public|protected|private)\\s+\\$" + name + "\\s+")
+                regex = new RegExp("^([\\t\\ ]*)(?:public|protected|private)\\s+\\$" + name + "\\s+")
 
                 editor.getBuffer().scan(regex, (matchInfo) =>
                     # Remove the spacing from the range.
