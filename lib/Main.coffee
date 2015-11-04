@@ -3,8 +3,6 @@
 MethodProvider = require './MethodProvider'
 PropertyProvider = require './PropertyProvider'
 
-MemberProvider = require './MemberProvider'
-
 module.exports =
     ###*
      * List of annotation providers.
@@ -27,8 +25,6 @@ module.exports =
     ###
     activateProviders: (service) ->
         @providers = []
-
-        # @providers.push new MemberProvider()
 
         @providers.push new MethodProvider()
         @providers.push new PropertyProvider()
