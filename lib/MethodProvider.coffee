@@ -14,7 +14,12 @@ class MethodProvider extends AbstractProvider
 
         return if not currentClass
 
-        @service.getClassInfo(currentClass, true).then (currentClassInfo) =>
+        promise = @service.getClassInfo(currentClass, true)
+
+        promise.catch () =>
+            # Just do nothing.
+
+        promise.then (currentClassInfo) =>
             return if not currentClassInfo
 
             for name, method of currentClassInfo.methods
