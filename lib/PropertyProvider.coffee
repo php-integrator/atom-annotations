@@ -14,12 +14,7 @@ class MethodProvider extends AbstractProvider
 
         return if not currentClass
 
-        promise = @service.getClassInfo(currentClass, true)
-
-        promise.catch () =>
-            # Just do nothing.
-
-        promise.then (currentClassInfo) =>
+        successHandler = (currentClassInfo) =>
             return if not currentClassInfo
 
             for name, property of currentClassInfo.properties
@@ -35,6 +30,11 @@ class MethodProvider extends AbstractProvider
 
                     matchInfo.stop()
                 )
+
+        failureHandler = () =>
+            # Just do nothing.
+
+        @service.getClassInfo(currentClass, true).then(successHandler, failureHandler)
 
     ###*
      * Fetches annotation info for the specified context.
