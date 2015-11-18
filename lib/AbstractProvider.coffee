@@ -57,8 +57,17 @@ class AbstractProvider
     ###
     doActualInitialization: () ->
         atom.workspace.observeTextEditors (editor) =>
-            @registerAnnotations(editor)
-            @registerEvents(editor)
+            if /text.html.php$/.test(editor.getGrammar().scopeName)
+                # NOTE: This is a very poor workaround, but at the moment I can't figure out any other way to do this
+                # properly. The problem is that the grammar needs time to perform the syntax highlighting. During that
+                # time, queries for scope descriptors will not return any useful information. However, the base package
+                # depends on them to find out whether a line contains comments or not. This mitigates (but will not
+                # completely solve) the issue. There seems to be no way to listen for the grammar to finish its parsing
+                # completely.
+                setTimeout(() =>
+                    @registerAnnotations(editor)
+                    @registerEvents(editor)
+                , 100)
 
         # When you go back to only have one pane the events are lost, so need to re-register.
         atom.workspace.onDidDestroyPane (pane) =>
@@ -83,7 +92,8 @@ class AbstractProvider
     registerEventsForPane: (pane) ->
         for paneItem in pane.items
             if paneItem instanceof TextEditor
-                @registerEvents(paneItem)
+                if /text.html.php$/.test(paneItem.getGrammar().scopeName)
+                    @registerEvents(paneItem)
 
     ###*
      * Deactives the provider.
@@ -97,26 +107,25 @@ class AbstractProvider
      * @param {TextEditor} editor TextEditor to register events to.
     ###
     registerEvents: (editor) ->
-        if /text.html.php$/.test(editor.getGrammar().scopeName)
-            # Ticket #107 - Mouseout isn't generated until the mouse moves, even when scrolling (with the keyboard or
-            # mouse). If the element goes out of the view in the meantime, its HTML element disappears, never removing
-            # it.
-            editor.onDidDestroy () =>
-                @removePopover()
+        # Ticket #107 - Mouseout isn't generated until the mouse moves, even when scrolling (with the keyboard or
+        # mouse). If the element goes out of the view in the meantime, its HTML element disappears, never removing
+        # it.
+        editor.onDidDestroy () =>
+            @removePopover()
 
-            editor.onDidStopChanging () =>
-                @removePopover()
+        editor.onDidStopChanging () =>
+            @removePopover()
 
-            editor.onDidSave (event) =>
-                @rescan(editor)
+        editor.onDidSave (event) =>
+            @rescan(editor)
 
-            textEditorElement = atom.views.getView(editor)
+        textEditorElement = atom.views.getView(editor)
 
-            $(textEditorElement.shadowRoot).find('.horizontal-scrollbar').on 'scroll', () =>
-                @removePopover()
+        $(textEditorElement.shadowRoot).find('.horizontal-scrollbar').on 'scroll', () =>
+            @removePopover()
 
-            $(textEditorElement.shadowRoot).find('.vertical-scrollbar').on 'scroll', () =>
-                @removePopover()
+        $(textEditorElement.shadowRoot).find('.vertical-scrollbar').on 'scroll', () =>
+            @removePopover()
 
     ###*
      * Registers the annotations.
