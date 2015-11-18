@@ -35,17 +35,30 @@ class AbstractProvider
      * @param {mixed} service
     ###
     activate: (@service) ->
+        dependentPackage = 'language-php'
+
+        # It could be that the dependent package is already active, in that case we can continue immediately. If not,
+        # we'll need to wait for the listener to be invoked
+        if atom.packages.isPackageActive(dependentPackage)
+            @doActualInitialization()
+
+        atom.packages.onDidActivatePackage (packageData) =>
+            return if packageData.name != dependentPackage
+
+            @doActualInitialization()
+
+        atom.packages.onDidDeactivatePackage (packageData) =>
+            return if packageData.name != dependentPackage
+
+            @deactivate()
+
+    ###*
+     * Does the actual initialization.
+    ###
+    doActualInitialization: () ->
         atom.workspace.observeTextEditors (editor) =>
-            # NOTE: This is a very poor workaround, but at the moment I can't figure out any other way to do this
-            # properly. The problem is that if a file is already open on startup, the grammar needs time to perform the
-            # syntax highlighting. During that time, queries for scope descriptors will not return any useful
-            # information yet. However, the base package depends on them to e.g. find out whether a line contains
-            # comments or not. This mitigates (but will not completely solve) the issue. There seems to be no way to
-            # listen for the grammar to finish its parsing completely.
-            setTimeout(() =>
-                @registerAnnotations(editor)
-                @registerEvents(editor)
-            , 100)
+            @registerAnnotations(editor)
+            @registerEvents(editor)
 
         # When you go back to only have one pane the events are lost, so need to re-register.
         atom.workspace.onDidDestroyPane (pane) =>
@@ -84,7 +97,7 @@ class AbstractProvider
      * @param {TextEditor} editor TextEditor to register events to.
     ###
     registerEvents: (editor) ->
-        if editor.getGrammar().scopeName.match /text.html.php$/
+        if /text.html.php$/.test(editor.getGrammar().scopeName)
             # Ticket #107 - Mouseout isn't generated until the mouse moves, even when scrolling (with the keyboard or
             # mouse). If the element goes out of the view in the meantime, its HTML element disappears, never removing
             # it.
