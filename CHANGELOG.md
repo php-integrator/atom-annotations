@@ -1,3 +1,6 @@
+## 0.2.2
+* Properly wait for the language-php package to become active.
+
 ## 0.2.1
 * Stop using maintainHistory to be compatible with upcoming Atom 1.3.
 
