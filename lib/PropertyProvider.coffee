@@ -58,7 +58,7 @@ class MethodProvider extends AbstractProvider
         # 'filename' can be false for overrides of members from PHP's built-in classes (e.g. Exception).
         if annotationInfo.extraData.declaringStructure.filename
             atom.workspace.open(annotationInfo.extraData.declaringStructure.filename, {
-                initialLine    : annotationInfo.extraData.startLine - 1,
+                initialLine    : annotationInfo.extraData.declaringStructure.startLineMember - 1,
                 searchAllPanes : true
             })
 
