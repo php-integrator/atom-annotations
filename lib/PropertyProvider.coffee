@@ -3,7 +3,7 @@ AbstractProvider = require './AbstractProvider'
 module.exports =
 
 ##*
-# Provides annotations for member methods that are overrides or interface implementations.
+# Provides annotations for member properties that are overrides.
 ##
 class MethodProvider extends AbstractProvider
     ###*
