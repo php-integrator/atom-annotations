@@ -1,8 +1,3 @@
-{Disposable} = require 'atom'
-
-MethodProvider = require './MethodProvider'
-PropertyProvider = require './PropertyProvider'
-
 module.exports =
     ###*
      * List of annotation providers.
@@ -26,6 +21,9 @@ module.exports =
     activateProviders: (service) ->
         @providers = []
 
+        MethodProvider = require './MethodProvider'
+        PropertyProvider = require './PropertyProvider'
+
         @providers.push new MethodProvider()
         @providers.push new PropertyProvider()
 
@@ -48,5 +46,7 @@ module.exports =
     ###
     setService: (service) ->
         @activateProviders(service)
+
+        {Disposable} = require 'atom'
 
         return new Disposable => @deactivateProviders()
