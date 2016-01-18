@@ -1,4 +1,3 @@
-$ = require 'jquery'
 SubAtom = require 'sub-atom'
 
 module.exports =
@@ -16,6 +15,11 @@ class AbstractProvider
      * SubAtom objects for each file.
     ###
     subAtoms: null
+
+    ###*
+     * SubAtom object for the entire window.
+    ###
+    subAtom: null
 
     ###*
      * The service (that can be used to query the source code and contains utility methods).
@@ -54,6 +58,8 @@ class AbstractProvider
      * Does the actual initialization.
     ###
     doActualInitialization: () ->
+        @subAtom = new SubAtom()
+
         atom.workspace.observeTextEditors (editor) =>
             if /text.html.php$/.test(editor.getGrammar().scopeName)
                 # NOTE: This is a very poor workaround, but at the moment I can't figure out any other way to do this
@@ -97,6 +103,7 @@ class AbstractProvider
      * Deactives the provider.
     ###
     deactivate: () ->
+        @subAtom.dispose()
         @removeAnnotations()
 
     ###*
@@ -119,10 +126,10 @@ class AbstractProvider
 
         textEditorElement = atom.views.getView(editor)
 
-        $(textEditorElement.shadowRoot).find('.horizontal-scrollbar').on 'scroll', () =>
+        @subAtom.add textEditorElement.shadowRoot.querySelector('.horizontal-scrollbar'), 'scroll', (event) =>
             @removePopover()
 
-        $(textEditorElement.shadowRoot).find('.vertical-scrollbar').on 'scroll', () =>
+        @subAtom.add textEditorElement.shadowRoot.querySelector('.vertical-scrollbar'), 'scroll', (event) =>
             @removePopover()
 
     ###*
@@ -171,7 +178,7 @@ class AbstractProvider
     ###
     registerAnnotationEventHandlers: (editor, row, annotationInfo) ->
         textEditorElement = atom.views.getView(editor)
-        gutterContainerElement = $(textEditorElement.shadowRoot).find('.gutter-container')
+        gutterContainerElement = textEditorElement.shadowRoot.querySelector('.gutter-container')
 
         do (editor, gutterContainerElement, annotationInfo) =>
             longTitle = editor.getLongTitle()
