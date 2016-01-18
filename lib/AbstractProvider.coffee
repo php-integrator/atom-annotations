@@ -1,5 +1,3 @@
-{TextEditor, Point, Range} = require 'atom'
-
 $ = require 'jquery'
 SubAtom = require 'sub-atom'
 
@@ -91,7 +89,7 @@ class AbstractProvider
     ###
     registerEventsForPane: (pane) ->
         for paneItem in pane.items
-            if paneItem instanceof TextEditor
+            if atom.workspace.isTextEditor(paneItem)
                 if /text.html.php$/.test(paneItem.getGrammar().scopeName)
                     @registerEvents(paneItem)
 
