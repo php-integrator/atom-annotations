@@ -1,3 +1,6 @@
+## 0.2.4 (base 0.5.0)
+* Annotations will now be rescanned when indexing succeeds instead of on save.
+
 ## 0.2.3 (base 0.4.0)
 * Fixed static methods not being annotated.
 * Fixed clicking property override annotations not navigating to the correct line.

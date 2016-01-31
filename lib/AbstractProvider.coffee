@@ -88,6 +88,26 @@ class AbstractProvider
                 if pane != observedPane
                     @registerEventsForPane(pane)
 
+        # Ensure annotations are updated.
+        @service.onDidFinishIndexing (data) =>
+            editor = @findTextEditorByPath(data.path)
+
+            @rescan(editor)
+
+    ###*
+     * Retrieves the text editor that is managing the file with the specified path.
+     *
+     * @param {string} path
+     *
+     * @return {TextEditor|null}
+    ###
+    findTextEditorByPath: (path) ->
+        for textEditor in atom.workspace.getTextEditors()
+            if textEditor.getPath() == path
+                return textEditor
+
+        return null
+
     ###*
      * Registers the necessary event handlers for the editors in the specified pane.
      *
@@ -120,9 +140,6 @@ class AbstractProvider
 
         editor.onDidStopChanging () =>
             @removePopover()
-
-        editor.onDidSave (event) =>
-            @rescan(editor)
 
         textEditorElement = atom.views.getView(editor)
 
