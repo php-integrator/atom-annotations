@@ -92,7 +92,8 @@ class AbstractProvider
         @service.onDidFinishIndexing (data) =>
             editor = @findTextEditorByPath(data.path)
 
-            @rescan(editor)
+            if editor?
+                @rescan(editor)
 
     ###*
      * Retrieves the text editor that is managing the file with the specified path.
