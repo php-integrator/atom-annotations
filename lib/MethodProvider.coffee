@@ -1,3 +1,5 @@
+{Range} = require 'atom'
+
 AbstractProvider = require './AbstractProvider'
 
 module.exports =
@@ -14,7 +16,7 @@ class MethodProvider extends AbstractProvider
 
         return if not path
 
-        classesInEditor = @service.getClassList(path)
+        classesInEditor = @service.getClassListForFile(path)
 
         successHandler = (classInfo) =>
             return if not classInfo
@@ -24,7 +26,9 @@ class MethodProvider extends AbstractProvider
 
                 regex = new RegExp("^([\\t\\ ]*)((?:public|protected|private)\\s+(?:static\\s+)?function\\s+" + name + "\\s*)\\(")
 
-                editor.getBuffer().scan(regex, (matchInfo) =>
+                range = new Range([classInfo.startLine, 0], [classInfo.endLine + 1, 0])
+
+                editor.scanInBufferRange(regex, range, (matchInfo) =>
                     # Remove the spacing from the range.
                     matchInfo.range.start.column += matchInfo.match[1].length
 
