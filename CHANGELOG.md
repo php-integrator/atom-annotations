@@ -1,3 +1,6 @@
+## 0.3.0 (base 0.6.0)
+* Files with multiple classes should now properly have their annotations registered, instead of just the first.
+
 ## 0.2.4 (base 0.5.0)
 * Annotations will now be rescanned when indexing succeeds instead of on save.
 

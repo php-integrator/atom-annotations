@@ -10,14 +10,16 @@ class MethodProvider extends AbstractProvider
      * @inheritdoc
     ###
     registerAnnotations: (editor) ->
-        currentClass = @service.determineFullClassName(editor)
+        path = editor.getPath()
 
-        return if not currentClass
+        return if not path
 
-        successHandler = (currentClassInfo) =>
-            return if not currentClassInfo
+        classesInEditor = @service.getClassList(path)
 
-            for name, method of currentClassInfo.methods
+        successHandler = (classInfo) =>
+            return if not classInfo
+
+            for name, method of classInfo.methods
                 continue if not method.override and not method.implementation
 
                 regex = new RegExp("^([\\t\\ ]*)((?:public|protected|private)\\s+(?:static\\s+)?function\\s+" + name + "\\s*)\\(")
@@ -34,7 +36,8 @@ class MethodProvider extends AbstractProvider
         failureHandler = () =>
             # Just do nothing.
 
-        @service.getClassInfo(currentClass, true).then(successHandler, failureHandler)
+        for name,classInfo of classesInEditor
+            @service.getClassInfo(name, true).then(successHandler, failureHandler)
 
     ###*
      * Fetches annotation info for the specified context.
