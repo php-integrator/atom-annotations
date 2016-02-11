@@ -51,10 +51,17 @@ class MethodProvider extends AbstractProvider
      * @return {Object}
     ###
     extractAnnotationInfo: (context) ->
-        # NOTE: We deliberately show the declaring class here, not the structure (which could be a trait).
+        # NOTE: We deliberately show the declaring class here, not the structure (which could be a trait). However,
+        # if the method is overriding a trait method from the *same* class, we show the trait name, as it would be
+        # strange to put an annotation in "Foo" saying "Overrides method from Foo".
+        overriddenFromFqcn = context.override.declaringClass.name
+
+        if overriddenFromFqcn == context.declaringClass.name
+            overriddenFromFqcn = context.override.declaringStructure.name
+
         return {
             lineNumberClass : 'override'
-            tooltipText     : 'Overrides property from ' + context.override.declaringClass.name
+            tooltipText     : 'Overrides property from ' + overriddenFromFqcn
             extraData       : context.override
         }
 

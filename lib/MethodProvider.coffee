@@ -55,13 +55,21 @@ class MethodProvider extends AbstractProvider
         tooltipText = ''
         lineNumberClass = ''
 
-        # NOTE: We deliberately show the declaring class here, not the structure (which could be a trait).
         if context.override
+            # NOTE: We deliberately show the declaring class here, not the structure (which could be a trait). However,
+            # if the method is overriding a trait method from the *same* class, we show the trait name, as it would be
+            # strange to put an annotation in "Foo" saying "Overrides method from Foo".
+            overriddenFromFqcn = context.override.declaringClass.name
+
+            if overriddenFromFqcn == context.declaringClass.name
+                overriddenFromFqcn = context.override.declaringStructure.name
+
             extraData = context.override
             lineNumberClass = 'override'
-            tooltipText = 'Overrides method from ' + extraData.declaringClass.name
+            tooltipText = 'Overrides method from ' + overriddenFromFqcn
 
         else
+            # NOTE: We deliberately show the declaring class here, not the structure (which could be a trait).
             extraData = context.implementation
             lineNumberClass = 'implementation'
             tooltipText = 'Implements method for ' + extraData.declaringClass.name
