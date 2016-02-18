@@ -1,6 +1,6 @@
 ## 0.3.0 (base 0.6.0)
 * Files with multiple classes should now properly have their annotations registered, instead of just the first.
-* Overrides for methods and properties originating from a trait in the *same* class will now list the name of the trait instead of the class name itself. Without this, if `Foo` overrides a method from one ow its own traits, the annotation would list `Overrides method from Foo`, which is confusing.
+* Overrides for methods and properties originating from a trait in the *same* class will now list the name of the trait instead of the class name itself. Without this, if `Foo` overrides a method from one of its own traits, the annotation would list `Overrides method from Foo`, which is confusing.
 
 ## 0.2.4 (base 0.5.0)
 * Annotations will now be rescanned when indexing succeeds instead of on save.
