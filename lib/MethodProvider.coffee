@@ -16,7 +16,11 @@ class MethodProvider extends AbstractProvider
 
         return if not path
 
-        classesInEditor = @service.getClassListForFile(path)
+        try
+            classesInEditor = @service.getClassListForFile(path)
+
+        catch error
+            return
 
         successHandler = (classInfo) =>
             return if not classInfo
