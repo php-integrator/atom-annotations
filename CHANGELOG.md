@@ -1,3 +1,6 @@
+## 0.3.2 (base 0.7.0)
+* Updated to work with the most recent service from the base package.
+
 ## 0.3.1
 * Catch exceptions properly.
 
