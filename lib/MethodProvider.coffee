@@ -69,8 +69,14 @@ class MethodProvider extends AbstractProvider
                 overriddenFromFqcn = context.override.declaringStructure.name
 
             extraData = context.override
-            lineNumberClass = 'override'
-            tooltipText = 'Overrides method from ' + overriddenFromFqcn
+
+            if not context.override.wasAbstract
+                lineNumberClass = 'override'
+                tooltipText = 'Overrides method from ' + overriddenFromFqcn
+
+            else
+                lineNumberClass = 'abstract-override'
+                tooltipText = 'Implements abstract method from ' + overriddenFromFqcn
 
         else
             # NOTE: We deliberately show the declaring class here, not the structure (which could be a trait).

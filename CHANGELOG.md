@@ -1,3 +1,6 @@
+## 0.4.0 (base 0.8.0)
+* "Overrides" for abstract methods will now be shown in a different color and with a different tooltip to allow a visual distinction between them and actual overrides as the former are more "implementation" and don't actually remove any existing functionality by overriding.
+
 ## 0.3.2 (base 0.7.0)
 * Updated to work with the most recent service from the base package.
 

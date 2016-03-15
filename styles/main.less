@@ -21,6 +21,19 @@ atom-text-editor, atom-text-editor::shadow {
                 }
             }
 
+            &.abstract-override {
+                .icon-right {
+                    opacity: 1.0;
+                    cursor: pointer;
+                    visibility: visible;
+
+                    &:before {
+                        content: @link;
+                        color: @ui-site-color-5;
+                    }
+                }
+            }
+
             &.implementation {
                 .icon-right {
                     opacity: 1.0;
