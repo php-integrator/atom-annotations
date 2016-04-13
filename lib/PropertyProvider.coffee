@@ -16,12 +16,6 @@ class MethodProvider extends AbstractProvider
 
         return if not path
 
-        try
-            classesInEditor = @service.getClassListForFile(path)
-
-        catch error
-            return
-
         successHandler = (classInfo) =>
             return if not classInfo
 
@@ -44,8 +38,11 @@ class MethodProvider extends AbstractProvider
         failureHandler = () =>
             # Just do nothing.
 
-        for name,classInfo of classesInEditor
-            @service.getClassInfo(name, true).then(successHandler, failureHandler)
+        getClassListHandler = (classesInEditor) =>
+            for name,classInfo of classesInEditor
+                @service.getClassInfo(name).then(successHandler, failureHandler)
+
+        @service.getClassListForFile(path).then(getClassListHandler, failureHandler)
 
     ###*
      * Fetches annotation info for the specified context.
