@@ -1,3 +1,6 @@
+## 0.4.1 (base 0.9.0)
+* Improve performance by removing the need for regular expression scanning.
+
 ## 0.4.0 (base 0.8.0)
 * "Overrides" for abstract methods will now be shown in a different color and with a different tooltip to allow a visual distinction between them and actual overrides as the former are more "implementation" and don't actually remove any existing functionality by overriding.
 
