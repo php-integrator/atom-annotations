@@ -1,7 +1,7 @@
 {
   "name": "php-integrator-annotations",
   "main": "./lib/Main",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Shows annotations (e.g. for overriden methods interface implementations) in your PHP source code.",
   "repository": "https://github.com/Gert-dev/php-integrator-annotations.git",
   "license": "GPL-3.0",
