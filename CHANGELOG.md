@@ -1,3 +1,6 @@
+## 1.0.0 (base 1.0.0)
+* Updated to work with the most recent service from the base package.
+
 ## 0.4.1 (base 0.9.0)
 * Improve performance by removing the need for regular expression scanning.
 
