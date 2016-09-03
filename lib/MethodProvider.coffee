@@ -71,7 +71,7 @@ class MethodProvider extends AbstractProvider
             # NOTE: We deliberately show the declaring class here, not the structure (which could be a trait).
             extraData = context.implementation
             lineNumberClass = 'implementation'
-            tooltipText = 'Implements method for ' + extraData.declaringClass.name
+            tooltipText = 'Implements method for ' + extraData.declaringStructure.name
 
         return {
             lineNumberClass : lineNumberClass
