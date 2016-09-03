@@ -21,7 +21,7 @@ class MethodProvider extends AbstractProvider
 
             for name, method of classInfo.methods
                 continue if not method.override and not method.implementation
-                continue if method.declaringStructure.name != classInfo.name
+                continue if method.declaringClass.name != classInfo.name
 
                 range = new Range([method.startLine - 1, 0], [method.startLine, -1])
 
