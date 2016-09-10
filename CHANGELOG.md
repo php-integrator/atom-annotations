@@ -1,3 +1,6 @@
+## 1.0.2
+* Fix an accidental incorrect release.
+
 ## 1.0.1
 * Fix the version specifier not being compatible with newer versions of the base service.
 
