@@ -62,12 +62,7 @@ class AbstractProvider
 
         atom.workspace.observeTextEditors (editor) =>
             if /text.html.php$/.test(editor.getGrammar().scopeName)
-                # NOTE: This is a very poor workaround, but at the moment I can't figure out any other way to do this
-                # properly. The problem is that the grammar needs time to perform the syntax highlighting. During that
-                # time, queries for scope descriptors will not return any useful information. However, the base package
-                # depends on them to find out whether a line contains comments or not. This mitigates (but will not
-                # completely solve) the issue. There seems to be no way to listen for the grammar to finish its parsing
-                # completely.
+                # Allow the active project to settle before registering for the first time.
                 setTimeout(() =>
                     @registerAnnotations(editor)
                     @registerEvents(editor)
