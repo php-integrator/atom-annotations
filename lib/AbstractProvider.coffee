@@ -149,6 +149,8 @@ class AbstractProvider
      * Registers the annotations.
      *
      * @param {TextEditor} editor The editor to search through.
+     *
+     * @return {Promise|null}
     ###
     registerAnnotations: (editor) ->
         throw new Error("This method is abstract and must be implemented!")
@@ -256,14 +258,6 @@ class AbstractProvider
             @attachedPopover = null
 
     ###*
-     * Removes any annotations that were created for the specified editor.
-     *
-     * @param {TextEditor} editor
-    ###
-    removeAnnotationsFor: (editor) ->
-        @removeAnnotationsByKey(editor.getLongTitle())
-
-    ###*
      * Removes any annotations that were created with the specified key.
      *
      * @param {string} key
@@ -294,5 +288,21 @@ class AbstractProvider
      * @param {TextEditor} editor The editor to search through.
     ###
     rescan: (editor) ->
-        @removeAnnotationsFor(editor)
-        @registerAnnotations(editor)
+        key = editor.getLongTitle()
+        renamedKey = 'tmp_' + key
+
+        # We rename the markers and remove them afterwards to prevent flicker if the location of the marker does not
+        # change.
+        if key of @subAtoms
+            @subAtoms[renamedKey] = @subAtoms[key]
+            @subAtoms[key] = []
+
+        if key of @markers
+            @markers[renamedKey] = @markers[key]
+            @markers[key] = []
+
+        result = @registerAnnotations(editor)
+
+        if result?
+            result.then () =>
+                @removeAnnotationsByKey(renamedKey)

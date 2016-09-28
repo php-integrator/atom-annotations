@@ -1,4 +1,5 @@
 ## 1.1.0 (base 1.3.0)
+* Annotations will no longer constantly flicker whenever indexing occurs (i.e. whenever the buffer changes).
 * The PHP documentation will now be openend when clicking an implementation or override of a built-in class or interface.
 
 ## 1.0.3

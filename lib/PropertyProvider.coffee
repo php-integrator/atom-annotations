@@ -14,10 +14,10 @@ class MethodProvider extends AbstractProvider
     registerAnnotations: (editor) ->
         path = editor.getPath()
 
-        return if not path
+        return null if not path
 
         successHandler = (classInfo) =>
-            return if not classInfo
+            return null if not classInfo
 
             for name, property of classInfo.properties
                 continue if not property.override
@@ -31,10 +31,14 @@ class MethodProvider extends AbstractProvider
             # Just do nothing.
 
         getClassListHandler = (classesInEditor) =>
-            for name,classInfo of classesInEditor
-                @service.getClassInfo(name).then(successHandler, failureHandler)
+            promises = []
 
-        @service.getClassListForFile(path).then(getClassListHandler, failureHandler)
+            for name,classInfo of classesInEditor
+                promises.push @service.getClassInfo(name).then(successHandler, failureHandler)
+
+            return Promise.all(promises)
+
+        return @service.getClassListForFile(path).then(getClassListHandler, failureHandler)
 
     ###*
      * Fetches annotation info for the specified context.
