@@ -1,3 +1,5 @@
+shell = require 'shell'
+
 {Range} = require 'atom'
 
 AbstractProvider = require './AbstractProvider'
@@ -73,6 +75,8 @@ class MethodProvider extends AbstractProvider
             lineNumberClass = 'implementation'
             tooltipText = 'Implements method for ' + extraData.declaringStructure.name
 
+        extraData.name = context.name
+
         return {
             lineNumberClass : lineNumberClass
             tooltipText     : tooltipText
@@ -89,6 +93,14 @@ class MethodProvider extends AbstractProvider
                 initialLine    : annotationInfo.extraData.declaringStructure.startLineMember - 1,
                 searchAllPanes : true
             })
+
+        else
+            url = @service.getDocumentationUrlForClassMethod(
+                annotationInfo.extraData.declaringStructure.name,
+                annotationInfo.extraData.name
+            )
+
+            shell.openExternal(url)
 
     ###*
      * @inheritdoc

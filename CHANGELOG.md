@@ -1,5 +1,5 @@
 ## 1.1.0 (base 1.3.0)
-* Update to work with the most recent service from the base package.
+* The PHP documentation will now be openend when clicking an implementation or override of a built-in class or interface.
 
 ## 1.0.3
 * Rename the package and repository.
