@@ -25,7 +25,7 @@ module.exports =
         PropertyProvider = require './PropertyProvider'
 
         @providers.push new MethodProvider()
-        # @providers.push new PropertyProvider()
+        @providers.push new PropertyProvider()
 
         for provider in @providers
             provider.activate(service)
