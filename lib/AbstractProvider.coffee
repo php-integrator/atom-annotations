@@ -88,7 +88,7 @@ class AbstractProvider
     ###*
      * Retrieves the text editor that is managing the file with the specified path.
      *
-     * @param {string} path
+     * @param {String} path
      *
      * @return {TextEditor|null}
     ###
@@ -229,7 +229,7 @@ class AbstractProvider
      * Registers annotation event handlers for the specified row.
      *
      * @param {TextEditor} editor
-     * @param {int}        row
+     * @param {Number}     row
      * @param {Object}     annotationInfo
     ###
     registerAnnotationEventHandlers: (editor, row, annotationInfo) ->
@@ -292,7 +292,7 @@ class AbstractProvider
     ###*
      * Removes any annotations that were created with the specified key.
      *
-     * @param {string} key
+     * @param {String} key
     ###
     removeAnnotationsByKey: (key) ->
         for i,marker of @markers[key]
