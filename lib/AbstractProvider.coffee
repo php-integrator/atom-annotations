@@ -1,5 +1,3 @@
-# SubAtom = require 'sub-atom'
-
 module.exports =
 
 ##*
