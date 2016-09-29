@@ -2,6 +2,7 @@
 * The dependency on `sub-atom` has been removed.
 * Annotations that are obscuring code folds in the gutter will no longer trigger them.
 * Annotations will no longer constantly flicker whenever indexing occurs (i.e. whenever the buffer changes).
+* Performance should have improved a bit as fewer event handlers are constantly being registered and removed.
 * The PHP documentation will now be openend when clicking an implementation or override of a built-in class or interface.
 
 ## 1.0.3
