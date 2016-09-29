@@ -15,9 +15,7 @@
       }
     }
   },
-  "dependencies": {
-    "sub-atom": "~1.0.0"
-  },
+  "dependencies": {},
   "keywords": [
     "php",
     "annotations",
