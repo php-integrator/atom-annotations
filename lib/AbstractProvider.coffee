@@ -163,10 +163,7 @@ class AbstractProvider
      * @param {Object}     annotationInfo
     ###
     placeAnnotation: (editor, range, annotationInfo) ->
-        # NOTE: New markers are added on startup as initialization is done, so making them persistent will cause the
-        # 'storage' file of the project (in Atom's config folder) to grow forever (in a way it's a memory leak).
         marker = editor.markBufferRange(range, {
-            persistent : false
             invalidate : 'touch'
         })
 
