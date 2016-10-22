@@ -22,7 +22,7 @@ class MethodProvider extends AbstractProvider
             return null if not classInfo
 
             for name, method of classInfo.methods
-                continue if not method.override and not method.implementation
+                continue if not method.override and method.implementation?.length == 0
                 continue if method.declaringStructure.name != classInfo.name
 
                 range = new Range([method.startLine - 1, 0], [method.startLine, -1])
@@ -75,7 +75,7 @@ class MethodProvider extends AbstractProvider
 
         else
             # NOTE: We deliberately show the declaring class here, not the structure (which could be a trait).
-            extraData = context.implementation
+            extraData = context.implementation[0]
             lineNumberClass = 'implementation'
             tooltipText = 'Implements method for ' + extraData.declaringStructure.name
 
