@@ -1,4 +1,4 @@
-## 1.1.0 (base 1.3.0)
+## 1.1.0 (base 2.0.0)
 * The dependency on `sub-atom` has been removed.
 * Annotations that are obscuring code folds in the gutter will no longer trigger them.
 * Annotations will no longer constantly flicker whenever indexing occurs (i.e. whenever the buffer changes).
