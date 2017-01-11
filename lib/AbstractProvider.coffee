@@ -133,13 +133,13 @@ class AbstractProvider
 
         textEditorElement = atom.views.getView(editor)
 
-        textEditorElement.shadowRoot.querySelector('.horizontal-scrollbar')?.addEventListener 'scroll', (event) =>
+        textEditorElement.querySelector('.horizontal-scrollbar')?.addEventListener 'scroll', (event) =>
             @removePopover()
 
-        textEditorElement.shadowRoot.querySelector('.vertical-scrollbar')?.addEventListener 'scroll', (event) =>
+        textEditorElement.querySelector('.vertical-scrollbar')?.addEventListener 'scroll', (event) =>
             @removePopover()
 
-        gutterContainerElement = textEditorElement.shadowRoot.querySelector('.gutter-container')
+        gutterContainerElement = textEditorElement.querySelector('.gutter-container')
 
         mouseOverHandler = (event) =>
             annotation = @getRelevantAnnotationForEvent(editor, event)
@@ -234,7 +234,7 @@ class AbstractProvider
     ###
     registerAnnotationEventHandlers: (editor, row, annotationInfo) ->
         textEditorElement = atom.views.getView(editor)
-        gutterContainerElement = textEditorElement.shadowRoot.querySelector('.gutter-container')
+        gutterContainerElement = textEditorElement.querySelector('.gutter-container')
 
         do (editor, gutterContainerElement, annotationInfo) =>
             longTitle = editor.getLongTitle()
