@@ -23,7 +23,7 @@ class MethodProvider extends AbstractProvider
 
             for name, method of classInfo.methods
                 continue if not method.override and method.implementations?.length == 0
-                continue if method.declaringStructure.name != classInfo.name
+                continue if method.declaringStructure.fqcn != classInfo.fqcn
 
                 range = new Range([method.startLine - 1, 0], [method.startLine, -1])
 
@@ -58,10 +58,10 @@ class MethodProvider extends AbstractProvider
             # NOTE: We deliberately show the declaring class here, not the structure (which could be a trait). However,
             # if the method is overriding a trait method from the *same* class, we show the trait name, as it would be
             # strange to put an annotation in "Foo" saying "Overrides method from Foo".
-            overriddenFromFqcn = context.override.declaringClass.name
+            overriddenFromFqcn = context.override.declaringClass.fqcn
 
-            if overriddenFromFqcn == context.declaringClass.name
-                overriddenFromFqcn = context.override.declaringStructure.name
+            if overriddenFromFqcn == context.declaringClass.fqcn
+                overriddenFromFqcn = context.override.declaringStructure.fqcn
 
             extraData = context.override
 
@@ -77,9 +77,9 @@ class MethodProvider extends AbstractProvider
             # NOTE: We deliberately show the declaring class here, not the structure (which could be a trait).
             extraData = context.implementations[0]
             lineNumberClass = 'implementations'
-            tooltipText = 'Implements method for ' + extraData.declaringStructure.name
+            tooltipText = 'Implements method for ' + extraData.declaringStructure.fqcn
 
-        extraData.name = context.name
+        extraData.fqcn = context.fqcn
 
         return {
             lineNumberClass : lineNumberClass
@@ -100,8 +100,8 @@ class MethodProvider extends AbstractProvider
 
         else
             url = @service.getDocumentationUrlForClassMethod(
-                annotationInfo.extraData.declaringStructure.name,
-                annotationInfo.extraData.name
+                annotationInfo.extraData.declaringStructure.fqcn,
+                annotationInfo.extraData.fqcn
             )
 
             shell.openExternal(url)
