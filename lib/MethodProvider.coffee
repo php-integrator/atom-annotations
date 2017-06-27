@@ -35,8 +35,8 @@ class MethodProvider extends AbstractProvider
         getClassListHandler = (classesInEditor) =>
             promises = []
 
-            for name,classInfo of classesInEditor
-                promises.push @service.getClassInfo(name).then(successHandler, failureHandler)
+            for fqcn, classInfo of classesInEditor
+                promises.push @service.getClassInfo(fqcn).then(successHandler, failureHandler)
 
             return Promise.all(promises)
 
