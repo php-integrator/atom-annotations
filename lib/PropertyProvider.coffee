@@ -21,7 +21,7 @@ class MethodProvider extends AbstractProvider
 
             for name, property of classInfo.properties
                 continue if not property.override
-                continue if property.declaringStructure.name != classInfo.name
+                continue if property.declaringStructure.fqcn != classInfo.fqcn
 
                 range = new Range([property.startLine - 1, 0], [property.startLine, -1])
 
@@ -33,8 +33,8 @@ class MethodProvider extends AbstractProvider
         getClassListHandler = (classesInEditor) =>
             promises = []
 
-            for name,classInfo of classesInEditor
-                promises.push @service.getClassInfo(name).then(successHandler, failureHandler)
+            for fqcn, classInfo of classesInEditor
+                promises.push @service.getClassInfo(fqcn).then(successHandler, failureHandler)
 
             return Promise.all(promises)
 
@@ -51,10 +51,10 @@ class MethodProvider extends AbstractProvider
         # NOTE: We deliberately show the declaring class here, not the structure (which could be a trait). However,
         # if the method is overriding a trait method from the *same* class, we show the trait name, as it would be
         # strange to put an annotation in "Foo" saying "Overrides method from Foo".
-        overriddenFromFqcn = context.override.declaringClass.name
+        overriddenFromFqcn = context.override.declaringClass.fqcn
 
-        if overriddenFromFqcn == context.declaringClass.name
-            overriddenFromFqcn = context.override.declaringStructure.name
+        if overriddenFromFqcn == context.declaringClass.fqcn
+            overriddenFromFqcn = context.override.declaringStructure.fqcn
 
         return {
             lineNumberClass : 'override'
