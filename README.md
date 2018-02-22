@@ -1,7 +1,7 @@
 # php-integrator/atom-annotations
 <p align="right">
 :coffee:
-<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YKTNLZCRHMRTJ">Send me some coffee beans</a>
+<a href="https://liberapay.com/Gert-dev/donate">Send me some coffee beans</a>
 </p>
 
 ![Screenshot](http://ipfs.pics/ipfs/QmTMju5ZZtcHBxKzfMfER35QkNik84Yva3HMbTz5LwMVdC)
