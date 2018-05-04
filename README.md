@@ -1,9 +1,8 @@
 # php-integrator/atom-annotations
-<p align="right">
-:coffee:
-<a href="https://liberapay.com/Gert-dev/donate">Send me some coffee beans</a>
-</p>
+## Legacy
+This is a legacy version that required PHP >= 7.1. Since 3.6, its functionality is included in the [base package](https://github.com/php-integrator/atom-base) and installing it separately is no longer necessary.
 
+## About
 ![Screenshot](http://ipfs.pics/ipfs/QmTMju5ZZtcHBxKzfMfER35QkNik84Yva3HMbTz5LwMVdC)
 
 This package provides annotations for your PHP source code using [PHP Integrator](https://github.com/php-integrator/atom-base).
